@@ -31,21 +31,26 @@ public class ProdutosDAO {
             prep.setString(1, produto.getNome());
             prep.setInt(2, produto.getValor());
             prep.setString(3, produto.getStatus());
-            
+
             prep.executeUpdate();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(ProdutosDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        finally{
-            JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE); 
+        } finally {
+            JOptionPane.showMessageDialog(null, "Produto cadastrado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }
 
-    public ArrayList<ProdutosDTO> listarProdutos() {
-
-        return listagem;
+    public static ResultSet consulta(Connection conn) {
+        try {
+            String sql = "SELECT * FROM produtos";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            return statement.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProdutosDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
     }
 
 }

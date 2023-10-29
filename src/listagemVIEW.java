@@ -1,12 +1,15 @@
 
-import java.util.ArrayList;
+import java.sql.Connection;
 import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author Adm
@@ -17,8 +20,11 @@ public class listagemVIEW extends javax.swing.JFrame {
      * Creates new form listagemVIEW
      */
     public listagemVIEW() {
+
         initComponents();
+
         listarProdutos();
+
     }
 
     /**
@@ -137,9 +143,9 @@ public class listagemVIEW extends javax.swing.JFrame {
 
     private void btnVenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVenderActionPerformed
         String id = id_produto_venda.getText();
-        
+
         ProdutosDAO produtosdao = new ProdutosDAO();
-        
+
         //produtosdao.venderProduto(Integer.parseInt(id));
         listarProdutos();
     }//GEN-LAST:event_btnVenderActionPerformed
@@ -201,25 +207,35 @@ public class listagemVIEW extends javax.swing.JFrame {
     private javax.swing.JTable listaProdutos;
     // End of variables declaration//GEN-END:variables
 
-    private void listarProdutos(){
-        try {
-            ProdutosDAO produtosdao = new ProdutosDAO();
-            
-            DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-            model.setNumRows(0);
-            
-            ArrayList<ProdutosDTO> listagem = produtosdao.listarProdutos();
-            
-            for(int i = 0; i < listagem.size(); i++){
-                model.addRow(new Object[]{
-                    listagem.get(i).getId(),
-                    listagem.get(i).getNome(),
-                    listagem.get(i).getValor(),
-                    listagem.get(i).getStatus()
-                });
+    private void listarProdutos() {
+        conectaDAO conexao = new conectaDAO();
+        Connection conn = conexao.connectDB();
+
+        ProdutosDAO produtosdao = new ProdutosDAO();
+
+        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
+        model.setNumRows(0);
+
+        
+
+        ResultSet resultSet = ProdutosDAO.consulta(conn);
+        
+        if(resultSet != null){
+            try {
+                while(resultSet.next()){
+                    String id = resultSet.getString("ID");
+                    String nome = resultSet.getString("Nome");
+                    String valor = resultSet.getString("Valor");
+                    String status = resultSet.getString("Status");
+                    
+                    model.addRow(new Object[]{id, nome, valor, status});
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(listagemVIEW.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception e) {
-        }
-    
+        } 
+
+        conexao.desconectar(conn);
+
     }
 }
