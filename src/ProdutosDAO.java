@@ -48,6 +48,17 @@ public class ProdutosDAO {
             return null;
         }
     }
+    
+    public static ResultSet consultaVendidos(Connection conn) {
+        try {
+            String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
+            PreparedStatement statement = conn.prepareStatement(sql);
+            return statement.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(ProdutosDAO.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
 
     public void venderProduto(Connection conn, Integer id) {
 
