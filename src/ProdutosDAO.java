@@ -11,17 +11,13 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class ProdutosDAO {
 
-    Connection conn;
     PreparedStatement prep;
-    ResultSet resultset;
-    ArrayList<ProdutosDTO> listagem = new ArrayList<>();
 
     public void cadastrarProduto(ProdutosDTO produto, Connection conn) {
 
@@ -50,6 +46,21 @@ public class ProdutosDAO {
         } catch (SQLException ex) {
             Logger.getLogger(ProdutosDAO.class.getName()).log(Level.SEVERE, null, ex);
             return null;
+        }
+    }
+
+    public void venderProduto(Connection conn, Integer id) {
+
+        try {
+            String sql = "UPDATE produtos SET status = ? WHERE id = ?";
+            
+            prep = conn.prepareStatement(sql);
+            prep.setString(1, "Vendido");
+            prep.setInt(2, id);
+            prep.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ProdutosDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
