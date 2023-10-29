@@ -111,7 +111,7 @@ public class listagemVIEW extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(btnVendas, javax.swing.GroupLayout.PREFERRED_SIZE, 168, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 440, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(49, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1)
@@ -155,10 +155,8 @@ public class listagemVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
-        conectaDAO conexao = new conectaDAO();
-        Connection conn = conexao.connectDB();
-        listarVendidos(conn);
-        conexao.desconectar(conn);
+        vendasVIEW vendas = new vendasVIEW();
+        vendas.setVisible(true);
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
@@ -243,31 +241,5 @@ public class listagemVIEW extends javax.swing.JFrame {
 
         conexao.desconectar(conn);
 
-    }
-    
-    private void listarVendidos(Connection conn){
-        
-        ProdutosDAO produtosdao = new ProdutosDAO();
-
-        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
-        model.setNumRows(0);
-        
-        
-        ResultSet resultSet = ProdutosDAO.consultaVendidos(conn);
-        
-        if(resultSet != null){
-            try {
-                while(resultSet.next()){
-                    String id = resultSet.getString("ID");
-                    String nome = resultSet.getString("Nome");
-                    String valor = resultSet.getString("Valor");
-                    String status = resultSet.getString("Status");
-                    
-                    model.addRow(new Object[]{id, nome, valor, status});
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(listagemVIEW.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }
 }
