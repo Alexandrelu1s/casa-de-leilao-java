@@ -155,7 +155,10 @@ public class listagemVIEW extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVenderActionPerformed
 
     private void btnVendasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVendasActionPerformed
-        
+        conectaDAO conexao = new conectaDAO();
+        Connection conn = conexao.connectDB();
+        listarVendidos(conn);
+        conexao.desconectar(conn);
     }//GEN-LAST:event_btnVendasActionPerformed
 
     private void btnVoltarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVoltarActionPerformed
@@ -240,5 +243,31 @@ public class listagemVIEW extends javax.swing.JFrame {
 
         conexao.desconectar(conn);
 
+    }
+    
+    private void listarVendidos(Connection conn){
+        
+        ProdutosDAO produtosdao = new ProdutosDAO();
+
+        DefaultTableModel model = (DefaultTableModel) listaProdutos.getModel();
+        model.setNumRows(0);
+        
+        
+        ResultSet resultSet = ProdutosDAO.consultaVendidos(conn);
+        
+        if(resultSet != null){
+            try {
+                while(resultSet.next()){
+                    String id = resultSet.getString("ID");
+                    String nome = resultSet.getString("Nome");
+                    String valor = resultSet.getString("Valor");
+                    String status = resultSet.getString("Status");
+                    
+                    model.addRow(new Object[]{id, nome, valor, status});
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(listagemVIEW.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }
